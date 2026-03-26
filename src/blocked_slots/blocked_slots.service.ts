@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client.js';
+import { Prisma } from '@prisma/client';
 import { CreateBlockedSlotDto } from './dto/create-blocked_slot.dto';
 import { UpdateBlockedSlotDto } from './dto/update-blocked_slot.dto';
 import { BlockedSlot } from './entities/blocked_slot.entity';

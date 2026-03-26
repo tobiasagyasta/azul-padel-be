@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client.js';
+import { Prisma } from '@prisma/client';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { Booking } from './entities/booking.entity';
@@ -10,7 +10,9 @@ export class BookingsService {
   constructor(private readonly bookingsRepository: BookingsRepository) {}
 
   create(createBookingDto: CreateBookingDto): Promise<Booking> {
-    return this.bookingsRepository.create(this.mapCreateDtoToPrisma(createBookingDto));
+    return this.bookingsRepository.create(
+      this.mapCreateDtoToPrisma(createBookingDto),
+    );
   }
 
   findAll(): Promise<Booking[]> {
