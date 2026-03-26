@@ -4,11 +4,23 @@ import { BlockedSlotsService } from './blocked_slots.service';
 
 describe('BlockedSlotsController', () => {
   let controller: BlockedSlotsController;
+  const blockedSlotsServiceMock = {
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    remove: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BlockedSlotsController],
-      providers: [BlockedSlotsService],
+      providers: [
+        {
+          provide: BlockedSlotsService,
+          useValue: blockedSlotsServiceMock,
+        },
+      ],
     }).compile();
 
     controller = module.get<BlockedSlotsController>(BlockedSlotsController);

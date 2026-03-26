@@ -4,11 +4,23 @@ import { SchedulesService } from './schedules.service';
 
 describe('SchedulesController', () => {
   let controller: SchedulesController;
+  const schedulesServiceMock = {
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    remove: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SchedulesController],
-      providers: [SchedulesService],
+      providers: [
+        {
+          provide: SchedulesService,
+          useValue: schedulesServiceMock,
+        },
+      ],
     }).compile();
 
     controller = module.get<SchedulesController>(SchedulesController);

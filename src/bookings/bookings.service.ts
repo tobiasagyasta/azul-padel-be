@@ -1,26 +1,80 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '../generated/prisma/client.js';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { Booking } from './entities/booking.entity';
+import { BookingsRepository } from './bookings.repository';
 
 @Injectable()
 export class BookingsService {
-  create(createBookingDto: CreateBookingDto) {
-    return 'This action adds a new booking';
+  constructor(private readonly bookingsRepository: BookingsRepository) {}
+
+  create(createBookingDto: CreateBookingDto): Promise<Booking> {
+    return this.bookingsRepository.create(this.mapCreateDtoToPrisma(createBookingDto));
   }
 
-  findAll() {
-    return `This action returns all bookings`;
+  findAll(): Promise<Booking[]> {
+    return this.bookingsRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} booking`;
+  async findOne(id: number): Promise<Booking> {
+    const booking = await this.bookingsRepository.findById(id);
+
+    if (!booking) {
+      throw new NotFoundException(`Booking with ID ${id} not found`);
+    }
+
+    return booking;
   }
 
-  update(id: number, updateBookingDto: UpdateBookingDto) {
-    return `This action updates a #${id} booking`;
+  update(id: number, updateBookingDto: UpdateBookingDto): Promise<Booking> {
+    return this.bookingsRepository.update(
+      id,
+      this.mapUpdateDtoToPrisma(updateBookingDto),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} booking`;
+  remove(id: number): Promise<Booking> {
+    return this.bookingsRepository.delete(id);
+  }
+
+  private mapCreateDtoToPrisma(
+    createBookingDto: CreateBookingDto,
+  ): Prisma.BookingCreateInput {
+    const { userId, courtId, ...bookingData } = createBookingDto;
+
+    return {
+      ...bookingData,
+      user: {
+        connect: { id: userId },
+      },
+      court: {
+        connect: { id: courtId },
+      },
+    };
+  }
+
+  private mapUpdateDtoToPrisma(
+    updateBookingDto: UpdateBookingDto,
+  ): Prisma.BookingUpdateInput {
+    const { userId, courtId, ...bookingData } = updateBookingDto;
+
+    return {
+      ...bookingData,
+      ...(userId !== undefined
+        ? {
+            user: {
+              connect: { id: userId },
+            },
+          }
+        : {}),
+      ...(courtId !== undefined
+        ? {
+            court: {
+              connect: { id: courtId },
+            },
+          }
+        : {}),
+    };
   }
 }
