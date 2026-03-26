@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, IsOptional, Min } from 'class-validator';
-import { BookingStatus } from '../../generated/prisma/enums.js';
+import { BookingStatus } from '@prisma/client';
 
 export class CreateBookingDto {
   @Type(() => Number)

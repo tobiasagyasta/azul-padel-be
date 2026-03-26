@@ -1,4 +1,4 @@
-import { BookingStatus } from '../../generated/prisma/enums.js';
+import { BookingStatus } from '@prisma/client';
 import type { Court } from '../../courts/entities/court.entity';
 import type { User } from '../../users/entities/user.entity';
 

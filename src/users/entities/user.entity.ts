@@ -1,4 +1,4 @@
-import { Role } from '../../generated/prisma/enums.js';
+import { Role } from '@prisma/client';
 import type { Booking } from '../../bookings/entities/booking.entity';
 
 export class User {

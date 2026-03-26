@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Role } from '../../generated/prisma/enums.js';
+import { Role } from '@prisma/client';
 
 export class CreateUserDto {
   @IsString()
