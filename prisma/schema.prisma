@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  role       Role     @default(USER)
+  createdAt  DateTime @default(now())
+
+  bookings   Booking[]
+}
+
+model Court {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  location    String
+  createdAt   DateTime      @default(now())
+
+  schedules    Schedule[]
+  bookings     Booking[]
+  blockedSlots BlockedSlot[]
+}
+
+model Schedule {
+  id        Int      @id @default(autoincrement())
+  courtId   Int
+  dayOfWeek Int      // 0 = Sunday, 6 = Saturday
+  openTime  DateTime @db.Time
+  closeTime DateTime @db.Time
+  createdAt DateTime @default(now())
+
+  court Court @relation(fields: [courtId], references: [id], onDelete: Cascade)
+
+  @@index([courtId])
+}
+
+model Booking {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  courtId   Int
+  startTime DateTime
+  endTime   DateTime
+  status    BookingStatus @default(CONFIRMED)
+  createdAt DateTime      @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  court Court @relation(fields: [courtId], references: [id], onDelete: Cascade)
+
+  @@unique([courtId, startTime])
+  @@index([courtId, startTime])
+  @@index([userId])
+}
+
+model BlockedSlot {
+  id        Int      @id @default(autoincrement())
+  courtId   Int
+  startTime DateTime
+  endTime   DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  court Court @relation(fields: [courtId], references: [id], onDelete: Cascade)
+
+  @@index([courtId])
+  @@index([courtId, startTime])
+}
