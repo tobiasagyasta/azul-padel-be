@@ -13,7 +13,11 @@ export class BlockedSlotsRepository {
 
   // Return all blocked slot records.
   findAll() {
-    return this.prisma.blockedSlot.findMany();
+    return this.prisma.blockedSlot.findMany({
+      orderBy: {
+        id: 'asc', // or 'desc'
+      },
+    });
   }
 
   // Find one blocked slot by its primary key.

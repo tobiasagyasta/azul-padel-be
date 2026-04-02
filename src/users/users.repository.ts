@@ -13,7 +13,11 @@ export class UsersRepository {
 
   // Return all user records.
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      orderBy: {
+        id: 'asc', // or 'desc'
+      },
+    });
   }
 
   // Find one user by its primary key.

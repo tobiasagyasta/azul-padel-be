@@ -13,7 +13,11 @@ export class BookingsRepository {
 
   // Return all booking records.
   findAll() {
-    return this.prisma.booking.findMany();
+    return this.prisma.booking.findMany({
+      orderBy: {
+        id: 'asc', // or 'desc'
+      },
+    });
   }
 
   // Find one booking by its primary key.

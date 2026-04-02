@@ -13,7 +13,11 @@ export class SchedulesRepository {
 
   // Return all schedule records.
   findAll() {
-    return this.prisma.schedule.findMany();
+    return this.prisma.schedule.findMany({
+      orderBy: {
+        id: 'asc', // or 'desc'
+      },
+    });
   }
 
   // Find one schedule by its primary key.

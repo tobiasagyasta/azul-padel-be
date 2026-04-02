@@ -13,7 +13,11 @@ export class CourtsRepository {
 
   // Return all court records.
   findAll() {
-    return this.prisma.court.findMany();
+    return this.prisma.court.findMany({
+      orderBy: {
+        id: 'asc', // or 'desc'
+      },
+    });
   }
 
   // Find one court by its primary key.
