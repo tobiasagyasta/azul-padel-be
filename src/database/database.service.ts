@@ -1,6 +1,6 @@
-import 'dotenv/config';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { Pool, QueryResult, QueryResultRow } from 'pg';
+import { createDatabasePool } from './database.connection';
 
 @Injectable()
 export class DatabaseService implements OnModuleDestroy {
@@ -21,13 +21,7 @@ export class DatabaseService implements OnModuleDestroy {
 
   private getPool(): Pool {
     if (!this.pool) {
-      const connectionString = process.env.DATABASE_URL;
-
-      if (!connectionString) {
-        throw new Error('DATABASE_URL is not set.');
-      }
-
-      this.pool = new Pool({ connectionString });
+      this.pool = createDatabasePool();
     }
 
     return this.pool;
