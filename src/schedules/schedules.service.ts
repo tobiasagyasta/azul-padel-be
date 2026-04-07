@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
+import { FindSchedulesQueryDto } from './dto/find-schedules-query.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
 import { SchedulesRepository } from './schedules.repository';
@@ -15,8 +16,8 @@ export class SchedulesService {
     );
   }
 
-  findAll(day?: number): Promise<Schedule[]> {
-    return this.schedulesRepository.findAll(day);
+  findAll(query: FindSchedulesQueryDto): Promise<Schedule[]> {
+    return this.schedulesRepository.findAll(query);
   }
 
   async findOne(id: number): Promise<Schedule> {

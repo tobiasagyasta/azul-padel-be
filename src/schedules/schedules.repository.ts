@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
+import { FindSchedulesQueryDto } from './dto/find-schedules-query.dto';
 
 @Injectable()
 export class SchedulesRepository {
@@ -12,9 +13,14 @@ export class SchedulesRepository {
   }
 
   // Return all schedule records.
-  findAll(day?: number) {
+  findAll(query: FindSchedulesQueryDto) {
+    const where: Prisma.ScheduleWhereInput = {
+      ...(query.day === undefined ? {} : { dayOfWeek: query.day }),
+      ...(query.courtId === undefined ? {} : { courtId: query.courtId }),
+    };
+
     return this.prisma.schedule.findMany({
-      where: day === undefined ? undefined : { dayOfWeek: day },
+      where: Object.keys(where).length === 0 ? undefined : where,
       orderBy: {
         id: 'asc', // or 'desc'
       },

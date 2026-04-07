@@ -8,4 +8,10 @@ export class FindSchedulesQueryDto {
   @Min(0)
   @Max(6)
   day?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  courtId?: number;
 }

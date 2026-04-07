@@ -26,7 +26,7 @@ export class SchedulesController {
 
   @Get()
   findAll(@Query() query: FindSchedulesQueryDto): Promise<Schedule[]> {
-    return this.schedulesService.findAll(query.day);
+    return this.schedulesService.findAll(query);
   }
 
   @Get(':id')
