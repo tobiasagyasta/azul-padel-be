@@ -7,9 +7,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
+import { FindSchedulesQueryDto } from './dto/find-schedules-query.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
 
@@ -23,8 +25,8 @@ export class SchedulesController {
   }
 
   @Get()
-  findAll(): Promise<Schedule[]> {
-    return this.schedulesService.findAll();
+  findAll(@Query() query: FindSchedulesQueryDto): Promise<Schedule[]> {
+    return this.schedulesService.findAll(query.day);
   }
 
   @Get(':id')

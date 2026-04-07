@@ -12,8 +12,9 @@ export class SchedulesRepository {
   }
 
   // Return all schedule records.
-  findAll() {
+  findAll(day?: number) {
     return this.prisma.schedule.findMany({
+      where: day === undefined ? undefined : { dayOfWeek: day },
       orderBy: {
         id: 'asc', // or 'desc'
       },

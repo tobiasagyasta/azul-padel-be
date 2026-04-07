@@ -15,8 +15,8 @@ export class SchedulesService {
     );
   }
 
-  findAll(): Promise<Schedule[]> {
-    return this.schedulesRepository.findAll();
+  findAll(day?: number): Promise<Schedule[]> {
+    return this.schedulesRepository.findAll(day);
   }
 
   async findOne(id: number): Promise<Schedule> {
