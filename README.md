@@ -24,6 +24,7 @@
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Database Design Diagram (Via DBML)](https://dbdocs.io/agyasta1808/AzulPadel)
 
 ## Project setup
 
