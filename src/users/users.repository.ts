@@ -27,6 +27,12 @@ export class UsersRepository {
     });
   }
 
+  findByUsername(username: string) {
+    return this.prisma.user.findUnique({
+      where: { username },
+    });
+  }
+
   // Update one user by its primary key.
   update(id: number, data: Prisma.UserUpdateInput) {
     return this.prisma.user.update({

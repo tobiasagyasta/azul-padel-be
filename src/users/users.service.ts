@@ -4,13 +4,21 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
+import { PasswordService } from '../password/password.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly passwordService: PasswordService,
+  ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
-    const data: Prisma.UserCreateInput = { ...createUserDto };
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const data: Prisma.UserCreateInput = {
+      ...createUserDto,
+      password: await this.passwordService.hashPassword(createUserDto.password),
+    };
+
     return this.usersRepository.create(data);
   }
 
@@ -28,8 +36,19 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  findByUsername(username: string): Promise<User | null> {
+    return this.usersRepository.findByUsername(username);
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const data: Prisma.UserUpdateInput = { ...updateUserDto };
+
+    if (updateUserDto.password !== undefined) {
+      data.password = await this.passwordService.hashPassword(
+        updateUserDto.password,
+      );
+    }
+
     return this.usersRepository.update(id, data);
   }
 

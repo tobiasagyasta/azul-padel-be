@@ -6,6 +6,7 @@ import { BookingsModule } from './bookings/bookings.module';
 import { CourtsModule } from './courts/courts.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { BlockedSlotsModule } from './blocked_slots/blocked_slots.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { BlockedSlotsModule } from './blocked_slots/blocked_slots.module';
     CourtsModule,
     SchedulesModule,
     BlockedSlotsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

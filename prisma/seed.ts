@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { BookingStatus, PrismaClient, Role } from '@prisma/client';
+import { PasswordService } from '../src/password/password.service';
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -12,6 +13,7 @@ if (!connectionString) {
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+const passwordService = new PasswordService();
 const seedBaseDate = new Date();
 
 seedBaseDate.setUTCHours(0, 0, 0, 0);
@@ -39,8 +41,9 @@ async function main() {
   const adminUser = await prisma.user.create({
     data: {
       name: 'Azul Admin',
+      username: 'azuladmin',
       email: 'admin@azulpadel.dev',
-      password: 'admin123',
+      password: await passwordService.hashPassword('admin123'),
       role: Role.ADMIN,
     },
   });
@@ -48,8 +51,9 @@ async function main() {
   const playerOne = await prisma.user.create({
     data: {
       name: 'Nadia Putri',
+      username: 'nadiaputri',
       email: 'nadia@azulpadel.dev',
-      password: 'player123',
+      password: await passwordService.hashPassword('player123'),
       role: Role.USER,
     },
   });
@@ -57,8 +61,9 @@ async function main() {
   const playerTwo = await prisma.user.create({
     data: {
       name: 'Rafi Pratama',
+      username: 'rafipratama',
       email: 'rafi@azulpadel.dev',
-      password: 'player123',
+      password: await passwordService.hashPassword('player123'),
       role: Role.USER,
     },
   });
@@ -66,8 +71,9 @@ async function main() {
   const playerThree = await prisma.user.create({
     data: {
       name: 'Maya Saputra',
+      username: 'mayasaputra',
       email: 'maya@azulpadel.dev',
-      password: 'player123',
+      password: await passwordService.hashPassword('player123'),
       role: Role.USER,
     },
   });
