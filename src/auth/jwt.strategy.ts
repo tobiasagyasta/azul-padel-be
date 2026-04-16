@@ -2,6 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
+import { requireEnv } from '../env';
 
 type JwtPayload = {
   sub: number;
@@ -15,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET ?? 'azul-padel-dev-secret',
+      secretOrKey: requireEnv('JWT_SECRET'),
     });
   }
 

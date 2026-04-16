@@ -4,8 +4,11 @@ import { JwtStrategy } from '../jwt.strategy';
 
 describe('JwtStrategy', () => {
   let strategy: JwtStrategy;
+  const originalJwtSecret = process.env.JWT_SECRET;
 
   beforeEach(async () => {
+    process.env.JWT_SECRET = 'test-jwt-secret';
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [JwtStrategy],
     }).compile();
@@ -29,5 +32,13 @@ describe('JwtStrategy', () => {
       username: 'azul-user',
       role: Role.ADMIN,
     });
+  });
+
+  afterEach(() => {
+    if (originalJwtSecret === undefined) {
+      delete process.env.JWT_SECRET;
+    } else {
+      process.env.JWT_SECRET = originalJwtSecret;
+    }
   });
 });

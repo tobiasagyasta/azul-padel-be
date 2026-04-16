@@ -8,14 +8,17 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { requireEnv } from '../env';
 
 @Module({
   imports: [
     UsersModule,
     PasswordModule,
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'azul-padel-dev-secret',
+    JwtModule.registerAsync({
+      useFactory: async () => ({
+        secret: requireEnv('JWT_SECRET'),
+      }),
     }),
   ],
   controllers: [AuthController],

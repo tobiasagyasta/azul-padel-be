@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { getPositiveIntegerEnv } from '../env';
 
 @Injectable()
 export class PasswordService {
-  private readonly saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS ?? 10);
+  private readonly saltRounds = getPositiveIntegerEnv('BCRYPT_SALT_ROUNDS');
 
   hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, this.saltRounds);
