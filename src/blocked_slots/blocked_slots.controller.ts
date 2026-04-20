@@ -8,11 +8,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { BlockedSlotsService } from './blocked_slots.service';
 import { CreateBlockedSlotDto } from './dto/create-blocked_slot.dto';
 import { UpdateBlockedSlotDto } from './dto/update-blocked_slot.dto';
 import { BlockedSlot } from './entities/blocked_slot.entity';
 
+@ApiTags('blocked-slots')
 @Controller('blocked-slots')
 export class BlockedSlotsController {
   constructor(private readonly blockedSlotsService: BlockedSlotsService) {}

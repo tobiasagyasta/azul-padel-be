@@ -9,41 +9,86 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { FindSchedulesQueryDto } from './dto/find-schedules-query.dto';
+import { ScheduleResponseDto } from './dto/schedule-response.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
 
+@ApiTags('schedules')
 @Controller('schedules')
 export class SchedulesController {
   constructor(private readonly schedulesService: SchedulesService) {}
 
+  @ApiCreatedResponse({ type: ScheduleResponseDto })
   @Post()
-  create(@Body() createScheduleDto: CreateScheduleDto): Promise<Schedule> {
-    return this.schedulesService.create(createScheduleDto);
+  async create(
+    @Body() createScheduleDto: CreateScheduleDto,
+  ): Promise<ScheduleResponseDto> {
+    const schedule = await this.schedulesService.create(createScheduleDto);
+
+    return ScheduleResponseDto.fromEntity(schedule);
   }
 
+  @ApiOkResponse({ type: ScheduleResponseDto, isArray: true })
+  @ApiQuery({ name: 'day', required: false, type: Number })
+  @ApiQuery({ name: 'courtId', required: false, type: Number })
   @Get()
-  findAll(@Query() query: FindSchedulesQueryDto): Promise<Schedule[]> {
+  async findAll(
+    @Query() query: FindSchedulesQueryDto,
+  ): Promise<ScheduleResponseDto[]> {
+    const schedules = await this.schedulesService.findAll(query);
+
+    return ScheduleResponseDto.fromEntities(schedules);
+  }
+
+  @ApiOkResponse({ type: Schedule, isArray: true })
+  @ApiQuery({ name: 'day', required: false, type: Number })
+  @ApiQuery({ name: 'courtId', required: false, type: Number })
+  @Get('raw')
+  findAllRaw(@Query() query: FindSchedulesQueryDto): Promise<Schedule[]> {
     return this.schedulesService.findAll(query);
   }
 
+  @ApiOkResponse({ type: ScheduleResponseDto })
+  @ApiParam({ name: 'id', type: Number })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Schedule> {
-    return this.schedulesService.findOne(id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ScheduleResponseDto> {
+    const schedule = await this.schedulesService.findOne(id);
+
+    return ScheduleResponseDto.fromEntity(schedule);
   }
 
+  @ApiOkResponse({ type: ScheduleResponseDto })
+  @ApiParam({ name: 'id', type: Number })
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateScheduleDto: UpdateScheduleDto,
-  ): Promise<Schedule> {
-    return this.schedulesService.update(id, updateScheduleDto);
+  ): Promise<ScheduleResponseDto> {
+    const schedule = await this.schedulesService.update(id, updateScheduleDto);
+
+    return ScheduleResponseDto.fromEntity(schedule);
   }
 
+  @ApiOkResponse({ type: ScheduleResponseDto })
+  @ApiParam({ name: 'id', type: Number })
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<Schedule> {
-    return this.schedulesService.remove(id);
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ScheduleResponseDto> {
+    const schedule = await this.schedulesService.remove(id);
+
+    return ScheduleResponseDto.fromEntity(schedule);
   }
 }

@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -18,10 +19,12 @@ import { CreateCourtDto } from './dto/create-court.dto';
 import { UpdateCourtDto } from './dto/update-court.dto';
 import { Court } from './entities/court.entity';
 
+@ApiTags('courts')
 @Controller('courts')
 export class CourtsController {
   constructor(private readonly courtsService: CourtsService) {}
 
+  @ApiBearerAuth('authBearer')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Post()
@@ -39,6 +42,7 @@ export class CourtsController {
     return this.courtsService.findOne(id);
   }
 
+  @ApiBearerAuth('authBearer')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Patch(':id')
@@ -49,6 +53,7 @@ export class CourtsController {
     return this.courtsService.update(id, updateCourtDto);
   }
 
+  @ApiBearerAuth('authBearer')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Delete(':id')
